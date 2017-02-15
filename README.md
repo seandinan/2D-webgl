@@ -3,6 +3,9 @@ Skeleton for Node/Express backend + React front-end + Babel/Webpack to bundle th
 
 ## Setup
 1. Fork this repo
+  - ```git clone https://github.com/seancdinan/rex.git <new-repo-name>```
+  - ```git remote set-url origin <your-new-remote-location>```
+  - ```git push -u origin master```
 2. ```npm run install``` to install dependencies
 3. ```npm run dev``` to fire up [webpack](https://webpack.github.io/) (it'll continue to listen for changes).
 4. ```npm run start``` to fire up the Express server on port 3000.
