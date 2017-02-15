@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Router, IndexRoute, Route, browserHistory, Link, IndexRedirect } from 'react-router';
 
 const container = (props) => (
-	<div style={{height: '100%', width: '100%', overflow: 'hidden' }}>
+	<div style={{height: '100%', width: '100%'}}>
 		{props.children}
 	</div>
 );
