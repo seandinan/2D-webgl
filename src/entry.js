@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, IndexRoute, Route, browserHistory, Link, IndexRedirect } from 'react-router';
+import ViewerPage from './pages/ViewerPage';
 
 const container = (props) => (
 	<div>
@@ -15,17 +16,11 @@ const error = () => (
 	</div>
 );
 
-/* REPLACE WITH YOUR INDEX ROUTE */
-const Placeholder = () => (
-	<div style={{marginTop: '5%', fontSize: '30px', color: 'hsl(0, 0%, 33%)', textAlign: 'center'}}>
-		Rex app is up n running!
-	</div>
-);
 
 const Routing = () => (
 	<Router history={browserHistory}>
 		<Route path="/" component={container}>
-			 <IndexRoute component={Placeholder} />
+			 <IndexRoute component={ViewerPage} />
 		</Route>
 
 		<Route path="*" component={error} />
