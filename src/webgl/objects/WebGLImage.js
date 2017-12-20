@@ -2,32 +2,32 @@ import PROGRAM from '../constants/programClass';
 import WebGLObject from './WebGLObject';
 import { setRectangle } from './../utils/setShapes';
 
-function WebGLImage(image, webglCanvas){
+class WebGLImage extends WebGLObject {
+	constructor(image, webglCanvas){
+		super(PROGRAM.IMAGE, webglCanvas);
+		this.width  = image.width;
+		this.height = image.height;
+		this.image = image;
+	}
 
-	const glImage = new WebGLObject(PROGRAM.IMAGE, webglCanvas);
-
-	glImage.width  = image.width;
-	glImage.height = image.height;
-
-	const gl = glImage.context;
-
-	glImage.render = () => {
-		const { program, locations } = glImage.program;
+	render = () => {
+		const gl = this.context;
+		const { program, locations } = this.program;
 
 		var positionBuffer = gl.createBuffer();
 		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
-		setRectangle(gl, glImage.position, glImage.width, glImage.height);
+		setRectangle(gl, this.position, this.width, this.height);
 
 		gl.useProgram(program);
 
-		glImage.setBrightness(webglCanvas.programs[PROGRAM.IMAGE]);
-		glImage.setContrast(webglCanvas.programs[PROGRAM.IMAGE]);
+		this.setBrightness(this.program);
+		this.setContrast(this.program);
 
-		gl.uniform2f(locations.uniform.resolution, webglCanvas.canvas.width, webglCanvas.canvas.height);
+		gl.uniform2f(locations.uniform.resolution, gl.canvas.width, gl.canvas.height);
 
 		gl.enableVertexAttribArray(locations.attribute.position);
-		
+
 		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
 
 		// Tell the attribute how to get data out of positionBuffer (ARRAY_BUFFER)
@@ -59,7 +59,7 @@ function WebGLImage(image, webglCanvas){
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
 		gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
 
-		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
+		gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, this.image);
 
 		gl.enableVertexAttribArray(locations.attribute.texCoord);
 		gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
@@ -78,8 +78,6 @@ function WebGLImage(image, webglCanvas){
 		gl.drawArrays(primitiveType, offset, count);
 
 	}
-
-	return glImage;
 }
 
 export default WebGLImage;

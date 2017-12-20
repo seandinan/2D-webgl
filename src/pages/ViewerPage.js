@@ -58,6 +58,8 @@ class ViewerPage extends React.Component {
 
   componentDidMount(){
 	  this.webGLCanvas = new WebGLCanvas(this.canvas);
+	  this.webGLCanvas.setCanvasSize(500, 500);
+	  this.addSquare(Math.random() * 500, Math.random() * 500);
 	  const image = document.createElement('img');
 	  image.onload = () => {
 		  this.canvas.width = image.width;
@@ -66,7 +68,7 @@ class ViewerPage extends React.Component {
 		  this.webGLCanvas.setCanvasSize(image.width, image.height);
 		  this.webGLCanvas.add(img);
 		  this.webGLCanvas.render();
-		  for (var i = 0; i < 50; i++){
+		  for (var i = 0; i < 5; i++){
 			  this.addSquare(Math.random() * image.width, Math.random() * image.height);
 		  }
 	  }

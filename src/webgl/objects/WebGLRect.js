@@ -1,37 +1,34 @@
 import WebGLShape from './WebGLShape';
 import { setRectangle } from './../utils/setShapes';
 
-function WebGLRect(webglCanvas, options = {}){
-	const glRect = new WebGLShape(webglCanvas);
-	const { program, locations } = glRect.program;
-	const gl = glRect.context;
+class WebGLRect extends WebGLShape {
+	constructor(webglCanvas, options = {}){
+		super(webglCanvas);
+		this.position = { x: options.x || 0, y: options.y || 0 };
+		this.height   = options.height || 100;
+		this.width    = options.width || 100;
 
-	glRect.position = { x: options.x || 0, y: options.y || 0 };
-	glRect.height = options.height || 100;
-	glRect.width  = options.width || 100;
+		this.color = [ Math.random(), Math.random(), Math.random() ];
+	}
 
-	// let color1 = 0.1504696029406818;
-	// let color2 =0.4187331927393345;
-	// let color3 = 0.4661974725816853;
-	glRect.color = [ Math.random(), Math.random(), Math.random() ];
-
-	glRect.render = () => {
+	render = () => {
+		const gl = this.context;
+		const { program, locations } = this.program;
 
 		var positionBuffer = gl.createBuffer(); // Create buffer for three 2D clip space points
 
 		gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer); // Bind ARRAY_BUFFER to positionBuffer;
 
-		setRectangle(gl, glRect.position, glRect.width, glRect.height);
+		setRectangle(gl, this.position, this.width, this.height);
 
 		gl.useProgram(program); // Set to current program
 
-		// set the resolution
-		gl.uniform2f(locations.uniform.resolution, webglCanvas.canvas.width, webglCanvas.canvas.height);
+		gl.uniform2f(locations.uniform.resolution, gl.canvas.width, gl.canvas.height);
 
 		// set the color
 
 		// gl.uniform4f(locations.uniform.color, color1, color2, color3, 1);
-		gl.uniform4f(locations.uniform.color, glRect.color[0], glRect.color[1], glRect.color[2], 1);
+		gl.uniform4f(locations.uniform.color, this.color[0], this.color[1], this.color[2], 1);
 
 		// Turn on the position attribute
 		gl.enableVertexAttribArray(locations.attribute.position);
@@ -54,8 +51,6 @@ function WebGLRect(webglCanvas, options = {}){
 		gl.drawArrays(primitiveType, offset, count);
 
 	};
-
-	return glRect;
 }
 
 export default WebGLRect;

@@ -1,17 +1,22 @@
 import PROGRAM from './constants/programClass';
 import { generateUUID } from './utils/generateUUID';
 
-function WebGLCanvas(domCanvas){
-	const gl = domCanvas.getContext("webgl");
-	if (!gl) throw new Error('WebGL not detected');
+class WebGLCanvas {
+	constructor(domCanvas){
+		const gl = domCanvas.getContext("webgl");
+		if (!gl) throw new Error('WebGL not detected');
 
-	this.id = generateUUID();
-	this.context = gl;
-	this.canvas = domCanvas;
-	this.programs = {}; // Caches programs that are used by multiple objects
-	this.objects = [];
+		this.id = generateUUID();
+		this.context = gl;
+		this.canvas = domCanvas;
+		this.height = domCanvas.height;
+		this.width = domCanvas.width;
+		this.programs = {}; // Caches programs that are used by multiple objects
+		this.objects = [];
+	}
 
-	this.createProgram = (programClass, vertexShader, fragmentShader) => {
+	createProgram = (programClass, vertexShader, fragmentShader) => {
+		const gl = this.context;
 		const program = gl.createProgram();
 		gl.attachShader(program, createShader(gl, vertexShader, gl.VERTEX_SHADER));
 		gl.attachShader(program, createShader(gl, fragmentShader, gl.FRAGMENT_SHADER));
@@ -53,23 +58,29 @@ function WebGLCanvas(domCanvas){
 		return this.programs[programClass];
 	}
 
-	this.resetCanvas = () => {
+	resetCanvas = () => {
 		this.setCanvasSize(this.canvas.width, this.canvas.height);
 		this.clearCanvas();
 	};
 
-	this.setCanvasSize = (width, height) => gl.viewport(0, 0, width, height);
+	setCanvasSize = (width, height) => {
+		this.width = width;
+		this.height = height;
+		this.canvas.width = width;
+		this.canvas.height = height;
+		this.context.viewport(0, 0, width, height);
+	}
 
-	this.clearCanvas = () => {
-		gl.clearColor(0, 0, 0, 0);
-		gl.clear(gl.COLOR_BUFFER_BIT);
+	clearCanvas = () => {
+		this.context.clearColor(0, 0, 0, 0);
+		this.context.clear(this.context.COLOR_BUFFER_BIT);
 	};
 
-	this.add = (obj) => this.objects.push(obj);
+	add = (obj) => this.objects.push(obj);
 
-	this.remove = (obj) => this.objects = this.objects.filter(o => o.id !== obj.id);
+	remove = (obj) => this.objects = this.objects.filter(o => o.id !== obj.id);
 
-	this.render = () => {
+	render = () => {
 		this.clearCanvas();
 		this.objects.forEach(object => { object.render() });
 	}

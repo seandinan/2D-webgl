@@ -1,9 +1,10 @@
 import PROGRAM from '../constants/programClass';
 import WebGLObject from './WebGLObject';
 
-function WebGLShape(webglCanvas){
-	const glShape = new WebGLObject(PROGRAM.SHAPE, webglCanvas);
-	return glShape;
+class WebGLShape extends WebGLObject {
+	constructor(webglCanvas){
+		super(PROGRAM.SHAPE, webglCanvas);
+	}
 }
 
 export default WebGLShape;
